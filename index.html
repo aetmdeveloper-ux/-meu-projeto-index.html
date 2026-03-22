@@ -64,69 +64,15 @@ textarea {
   <button onclick="showExample('css')">CSS</button>
   <button onclick="showExample('js')">JavaScript</button>
 
-  <!-- CÓDIGO EXEMPLO -->
+  <!-- BUSCA -->
   <h3>Buscar código:</h3>
-<input type="text" id="busca" placeholder="Ex: função, botão, if..." />
-<button onclick="buscarCodigo()">Buscar</button>
-    palavras: ["botão", "clique"],
-    codigo: `document.getElementById("btn").onclick = function() {
-  alert("Clicou!");
-};`,
-    explicacao: "Isso executa algo ao clicar em um botão."
-  },
+  <input type="text" id="busca" placeholder="Ex: função, botão, if..." />
+  <button onclick="buscarCodigo()">Buscar</button>
 
-  {
-    palavras: ["if", "condição"],
-    codigo: `if (x > 10) {
-  console.log("Maior que 10");
-} else {
-  console.log("Menor ou igual a 10");
-}`,
-    explicacao: "Estrutura de decisão (if/else)."
-  },
+  <!-- EXEMPLO -->
+  <h3>Exemplo:</h3>
+  <textarea id="codeBox"></textarea>
 
-  {
-    palavras: ["tempo", "intervalo"],
-    codigo: `setInterval(function() {
-  console.log("Executando...");
-}, 1000);`,
-    explicacao: "Executa algo repetidamente no tempo."
-  },
-
-  {
-    palavras: ["elemento", "id"],
-    codigo: `const el = document.getElementById("meuId");
-el.innerText = "Texto alterado";`,
-    explicacao: "Pega elemento da página pelo ID."
-  }
-];
-
-// ===== FUNÇÃO DE BUSCA =====
-function buscarCodigo() {
-  const entrada = document.getElementById("busca").value.toLowerCase();
-  const codeBox = document.getElementById("codeBox");
-  const explanation = document.getElementById("explanation");
-
-  let resultado = "";
-  let explicacaoFinal = "";
-
-  bancoBusca.forEach(item => {
-    item.palavras.forEach(p => {
-      if (entrada.includes(p)) {
-        resultado += "\n// 🔹 " + p + "\n" + item.codigo + "\n";
-        explicacaoFinal += "👉 " + item.explicacao + "\n";
-      }
-    });
-  });
-
-  if (resultado === "") {
-    codeBox.value = "// ❌ Nenhum resultado encontrado";
-    explanation.innerText = "Tente: função, botão, if, intervalo, id";
-  } else {
-    codeBox.value = resultado;
-    explanation.innerText = explicacaoFinal;
-  }
-}
   <!-- EXPLICAÇÃO -->
   <div id="explanation"></div>
 
@@ -142,95 +88,22 @@ function buscarCodigo() {
 
 <script>
 
-// ===== EXEMPLOS =====
-function showExample(type) {
-  const codeBox = document.getElementById("codeBox");
-  const explanation = document.getElementById("explanation");
-
-  if (type === "html") {
-    codeBox.value =
-`<html>
-  <body>
-    <h1>Olá Mundo</h1>
-  </body>
-</html>`;
-
-    explanation.innerText =
-"HTML é a estrutura do site. Aqui criamos um título.";
-  }
-
-  if (type === "css") {
-    codeBox.value =
-`body {
-  background: black;
-  color: white;
-}`;
-
-    explanation.innerText =
-"CSS define o estilo. Aqui mudamos cor de fundo e texto.";
-  }
-
-  if (type === "js") {
-    codeBox.value =
-`function ola() {
-  alert("Olá!");
-}`;
-
-    explanation.innerText =
-"JavaScript cria interação. Aqui mostramos um alerta.";
-  }
-}
-
-// ===== ANALISADOR DE CÓDIGO =====
-function analyzeCode() {
-  const code = document.getElementById("userCode").value;
-  const output = document.getElementById("output");
-
-  let errors = [];
-
-  // ===== HTML CHECK =====
-  if (code.includes("<html") && !code.includes("</html>")) {
-    errors.push("❌ Falta fechar a tag </html>");
-  }
-
-  if (code.includes("<body") && !code.includes("</body>")) {
-    errors.push("❌ Falta fechar a tag </body>");
-  }
-
-  // ===== JS CHECK =====
-  if (code.includes("function") && !code.includes("{")) {
-    errors.push("❌ Função sem { }");
-  }
-
-  // ===== CSS CHECK =====
-  if (code.includes("{") && !code.includes("}")) {
-    errors.push("❌ Falta fechar } no CSS");
-  }
-
-  // ===== RESULTADO =====
-  if (errors.length === 0) {
-    output.innerHTML = "✅ Código parece correto!";
-  } else {
-    output.innerHTML = errors.join("<br>");
-  }
-// ===== BUSCA INTELIGENTE =====
+// ===== BANCO =====
 const bancoBusca = [
   {
     palavras: ["função", "function"],
     codigo: `function exemplo() {
   console.log("Executando função");
 }`,
-    explicacao: "Isso cria uma função em JavaScript."
+    explicacao: "Cria uma função em JavaScript."
   },
-
   {
     palavras: ["botão", "clique"],
     codigo: `document.getElementById("btn").onclick = function() {
   alert("Clicou!");
 };`,
-    explicacao: "Isso executa algo ao clicar em um botão."
+    explicacao: "Executa algo ao clicar."
   },
-
   {
     palavras: ["if", "condição"],
     codigo: `if (x > 10) {
@@ -238,26 +111,24 @@ const bancoBusca = [
 } else {
   console.log("Menor ou igual a 10");
 }`,
-    explicacao: "Estrutura de decisão (if/else)."
+    explicacao: "Estrutura de decisão."
   },
-
   {
     palavras: ["tempo", "intervalo"],
     codigo: `setInterval(function() {
   console.log("Executando...");
 }, 1000);`,
-    explicacao: "Executa algo repetidamente no tempo."
+    explicacao: "Executa repetidamente."
   },
-
   {
     palavras: ["elemento", "id"],
     codigo: `const el = document.getElementById("meuId");
 el.innerText = "Texto alterado";`,
-    explicacao: "Pega elemento da página pelo ID."
+    explicacao: "Seleciona elemento."
   }
 ];
 
-// ===== FUNÇÃO DE BUSCA =====
+// ===== BUSCA =====
 function buscarCodigo() {
   const entrada = document.getElementById("busca").value.toLowerCase();
   const codeBox = document.getElementById("codeBox");
@@ -281,6 +152,69 @@ function buscarCodigo() {
   } else {
     codeBox.value = resultado;
     explanation.innerText = explicacaoFinal;
+  }
+}
+
+// ===== EXEMPLOS =====
+function showExample(type) {
+  const codeBox = document.getElementById("codeBox");
+  const explanation = document.getElementById("explanation");
+
+  if (type === "html") {
+    codeBox.value =
+`<html>
+  <body>
+    <h1>Olá Mundo</h1>
+  </body>
+</html>`;
+    explanation.innerText = "HTML = estrutura.";
+  }
+
+  if (type === "css") {
+    codeBox.value =
+`body {
+  background: black;
+  color: white;
+}`;
+    explanation.innerText = "CSS = estilo.";
+  }
+
+  if (type === "js") {
+    codeBox.value =
+`function ola() {
+  alert("Olá!");
+}`;
+    explanation.innerText = "JS = interação.";
+  }
+}
+
+// ===== ANALISADOR =====
+function analyzeCode() {
+  const code = document.getElementById("userCode").value;
+  const output = document.getElementById("output");
+
+  let errors = [];
+
+  if (code.includes("<html") && !code.includes("</html>")) {
+    errors.push("❌ Falta </html>");
+  }
+
+  if (code.includes("<body") && !code.includes("</body>")) {
+    errors.push("❌ Falta </body>");
+  }
+
+  if (code.includes("function") && !code.includes("{")) {
+    errors.push("❌ Função sem { }");
+  }
+
+  if (code.includes("{") && !code.includes("}")) {
+    errors.push("❌ Falta }");
+  }
+
+  if (errors.length === 0) {
+    output.innerHTML = "✅ Código parece correto!";
+  } else {
+    output.innerHTML = errors.join("<br>");
   }
 }
 
