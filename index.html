@@ -81,6 +81,7 @@ textarea {
   <textarea id="userCode" placeholder="Cole seu código aqui..."></textarea>
 
   <button onclick="analyzeCode()">🔍 Analisar Código</button>
+  <button onclick="limparTudo()">🧹 Limpar</button>
 
   <div id="output"></div>
 
@@ -188,34 +189,48 @@ function showExample(type) {
   }
 }
 
-// ===== ANALISADOR =====
+// ===== ANALISADOR COM LINHA =====
 function analyzeCode() {
   const code = document.getElementById("userCode").value;
   const output = document.getElementById("output");
 
   let errors = [];
+  const linhas = code.split("\n");
 
-  if (code.includes("<html") && !code.includes("</html>")) {
-    errors.push("❌ Falta </html>");
-  }
+  linhas.forEach((linha, index) => {
+    const n = index + 1;
 
-  if (code.includes("<body") && !code.includes("</body>")) {
-    errors.push("❌ Falta </body>");
-  }
+    if (linha.includes("<html") && !code.includes("</html>")) {
+      errors.push(`❌ Linha ${n}: Falta </html>`);
+    }
 
-  if (code.includes("function") && !code.includes("{")) {
-    errors.push("❌ Função sem { }");
-  }
+    if (linha.includes("<body") && !code.includes("</body>")) {
+      errors.push(`❌ Linha ${n}: Falta </body>`);
+    }
 
-  if (code.includes("{") && !code.includes("}")) {
-    errors.push("❌ Falta }");
-  }
+    if (linha.includes("function") && !linha.includes("{")) {
+      errors.push(`❌ Linha ${n}: Função sem {`);
+    }
+
+    if (linha.includes("{") && !linha.includes("}")) {
+      errors.push(`❌ Linha ${n}: Falta }`);
+    }
+  });
 
   if (errors.length === 0) {
     output.innerHTML = "✅ Código parece correto!";
   } else {
     output.innerHTML = errors.join("<br>");
   }
+}
+
+// ===== LIMPAR =====
+function limparTudo() {
+  document.getElementById("userCode").value = "";
+  document.getElementById("codeBox").value = "";
+  document.getElementById("output").innerHTML = "";
+  document.getElementById("explanation").innerText = "";
+  document.getElementById("busca").value = "";
 }
 
 </script>
