@@ -21,6 +21,14 @@ h1 {
   margin: auto;
 }
 
+/* 🔥 SEPARAÇÃO VISUAL */
+.box {
+  border: 1px solid #00f0ff;
+  margin-top: 20px;
+  padding: 15px;
+  background: #111;
+}
+
 button {
   background: #111;
   color: #00f0ff;
@@ -37,18 +45,19 @@ button:hover {
 
 textarea {
   width: 100%;
-  height: 200px;
-  background: #111;
+  height: 180px;
+  background: #000;
   color: #0f0;
   border: 1px solid #00f0ff;
   padding: 10px;
 }
 
 #output {
-  margin-top: 20px;
+  margin-top: 15px;
   padding: 10px;
-  background: #111;
+  background: #000;
   border: 1px solid #00f0ff;
+  text-align: left;
 }
 </style>
 </head>
@@ -59,102 +68,31 @@ textarea {
 
 <div class="container">
 
-  <!-- BOTÕES -->
-  <button onclick="showExample('html')">HTML</button>
-  <button onclick="showExample('css')">CSS</button>
-  <button onclick="showExample('js')">JavaScript</button>
+  <!-- EXEMPLOS -->
+  <div class="box">
+    <h3>Exemplos:</h3>
+    <button onclick="showExample('html')">HTML</button>
+    <button onclick="showExample('css')">CSS</button>
+    <button onclick="showExample('js')">JavaScript</button>
 
-  <!-- BUSCA -->
-  <h3>Buscar código:</h3>
-  <input type="text" id="busca" placeholder="Ex: função, botão, if..." />
-  <button onclick="buscarCodigo()">Buscar</button>
-
-  <!-- EXEMPLO -->
-  <h3>Exemplo:</h3>
-  <textarea id="codeBox"></textarea>
-
-  <!-- EXPLICAÇÃO -->
-  <div id="explanation"></div>
+    <textarea id="codeBox"></textarea>
+    <div id="explanation"></div>
+  </div>
 
   <!-- ANALISADOR -->
-  <h3>Teste seu código:</h3>
-  <textarea id="userCode" placeholder="Cole seu código aqui..."></textarea>
+  <div class="box">
+    <h3>Teste seu código:</h3>
+    <textarea id="userCode" placeholder="Cole seu código aqui..."></textarea>
 
-  <button onclick="analyzeCode()">🔍 Analisar Código</button>
-  <button onclick="limparTudo()">🧹 Limpar</button>
+    <button onclick="analyzeCode()">🔍 Analisar</button>
+    <button onclick="limparTudo()">🧹 Limpar</button>
 
-  <div id="output"></div>
+    <div id="output"></div>
+  </div>
 
 </div>
 
 <script>
-
-// ===== BANCO =====
-const bancoBusca = [
-  {
-    palavras: ["função", "function"],
-    codigo: `function exemplo() {
-  console.log("Executando função");
-}`,
-    explicacao: "Cria uma função em JavaScript."
-  },
-  {
-    palavras: ["botão", "clique"],
-    codigo: `document.getElementById("btn").onclick = function() {
-  alert("Clicou!");
-};`,
-    explicacao: "Executa algo ao clicar."
-  },
-  {
-    palavras: ["if", "condição"],
-    codigo: `if (x > 10) {
-  console.log("Maior que 10");
-} else {
-  console.log("Menor ou igual a 10");
-}`,
-    explicacao: "Estrutura de decisão."
-  },
-  {
-    palavras: ["tempo", "intervalo"],
-    codigo: `setInterval(function() {
-  console.log("Executando...");
-}, 1000);`,
-    explicacao: "Executa repetidamente."
-  },
-  {
-    palavras: ["elemento", "id"],
-    codigo: `const el = document.getElementById("meuId");
-el.innerText = "Texto alterado";`,
-    explicacao: "Seleciona elemento."
-  }
-];
-
-// ===== BUSCA =====
-function buscarCodigo() {
-  const entrada = document.getElementById("busca").value.toLowerCase();
-  const codeBox = document.getElementById("codeBox");
-  const explanation = document.getElementById("explanation");
-
-  let resultado = "";
-  let explicacaoFinal = "";
-
-  bancoBusca.forEach(item => {
-    item.palavras.forEach(p => {
-      if (entrada.includes(p)) {
-        resultado += "\n// 🔹 " + p + "\n" + item.codigo + "\n";
-        explicacaoFinal += "👉 " + item.explicacao + "\n";
-      }
-    });
-  });
-
-  if (resultado === "") {
-    codeBox.value = "// ❌ Nenhum resultado encontrado";
-    explanation.innerText = "Tente: função, botão, if, intervalo, id";
-  } else {
-    codeBox.value = resultado;
-    explanation.innerText = explicacaoFinal;
-  }
-}
 
 // ===== EXEMPLOS =====
 function showExample(type) {
@@ -189,36 +127,52 @@ function showExample(type) {
   }
 }
 
-// ===== ANALISADOR COM LINHA =====
+// ===== ANALISADOR MELHORADO =====
 function analyzeCode() {
   const code = document.getElementById("userCode").value;
   const output = document.getElementById("output");
 
+  output.innerHTML = "";
+
   let errors = [];
   const linhas = code.split("\n");
 
-  linhas.forEach((linha, index) => {
-    const n = index + 1;
+  let chaves = 0;
 
-    if (linha.includes("<html") && !code.includes("</html>")) {
-      errors.push(`❌ Linha ${n}: Falta </html>`);
-    }
+  linhas.forEach((linha, i) => {
+    const n = i + 1;
 
-    if (linha.includes("<body") && !code.includes("</body>")) {
-      errors.push(`❌ Linha ${n}: Falta </body>`);
-    }
+    if (linha.includes("{")) chaves++;
+    if (linha.includes("}")) chaves--;
 
     if (linha.includes("function") && !linha.includes("{")) {
-      errors.push(`❌ Linha ${n}: Função sem {`);
+      errors.push(`❌ Linha ${n}: função sem {`);
     }
 
-    if (linha.includes("{") && !linha.includes("}")) {
-      errors.push(`❌ Linha ${n}: Falta }`);
+    if (linha.includes("if") && !linha.includes("(")) {
+      errors.push(`❌ Linha ${n}: if sem ()`);
     }
   });
 
+  if (chaves !== 0) {
+    errors.push("❌ Erro geral: chaves { } desbalanceadas");
+  }
+
+  if (code.includes("<html") && !code.includes("</html>")) {
+    errors.push("❌ Falta </html>");
+  }
+
+  if (code.includes("<body") && !code.includes("</body>")) {
+    errors.push("❌ Falta </body>");
+  }
+
+  if (code.trim() === "") {
+    output.innerHTML = "⚠️ Digite algum código";
+    return;
+  }
+
   if (errors.length === 0) {
-    output.innerHTML = "✅ Código parece correto!";
+    output.innerHTML = "✅ Código analisado: nenhum erro básico";
   } else {
     output.innerHTML = errors.join("<br>");
   }
@@ -230,7 +184,6 @@ function limparTudo() {
   document.getElementById("codeBox").value = "";
   document.getElementById("output").innerHTML = "";
   document.getElementById("explanation").innerText = "";
-  document.getElementById("busca").value = "";
 }
 
 </script>
