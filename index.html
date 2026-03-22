@@ -65,9 +65,68 @@ textarea {
   <button onclick="showExample('js')">JavaScript</button>
 
   <!-- CÓDIGO EXEMPLO -->
-  <h3>Exemplo:</h3>
-  <textarea id="codeBox"></textarea>
+  <h3>Buscar código:</h3>
+<input type="text" id="busca" placeholder="Ex: função, botão, if..." />
+<button onclick="buscarCodigo()">Buscar</button>
+    palavras: ["botão", "clique"],
+    codigo: `document.getElementById("btn").onclick = function() {
+  alert("Clicou!");
+};`,
+    explicacao: "Isso executa algo ao clicar em um botão."
+  },
 
+  {
+    palavras: ["if", "condição"],
+    codigo: `if (x > 10) {
+  console.log("Maior que 10");
+} else {
+  console.log("Menor ou igual a 10");
+}`,
+    explicacao: "Estrutura de decisão (if/else)."
+  },
+
+  {
+    palavras: ["tempo", "intervalo"],
+    codigo: `setInterval(function() {
+  console.log("Executando...");
+}, 1000);`,
+    explicacao: "Executa algo repetidamente no tempo."
+  },
+
+  {
+    palavras: ["elemento", "id"],
+    codigo: `const el = document.getElementById("meuId");
+el.innerText = "Texto alterado";`,
+    explicacao: "Pega elemento da página pelo ID."
+  }
+];
+
+// ===== FUNÇÃO DE BUSCA =====
+function buscarCodigo() {
+  const entrada = document.getElementById("busca").value.toLowerCase();
+  const codeBox = document.getElementById("codeBox");
+  const explanation = document.getElementById("explanation");
+
+  let resultado = "";
+  let explicacaoFinal = "";
+
+  bancoBusca.forEach(item => {
+    item.palavras.forEach(p => {
+      if (entrada.includes(p)) {
+        resultado += "\n// 🔹 " + p + "\n" + item.codigo + "\n";
+        explicacaoFinal += "👉 " + item.explicacao + "\n";
+      }
+    });
+  });
+
+  if (resultado === "") {
+    codeBox.value = "// ❌ Nenhum resultado encontrado";
+    explanation.innerText = "Tente: função, botão, if, intervalo, id";
+  } else {
+    codeBox.value = resultado;
+    explanation.innerText = explicacaoFinal;
+  }
+}
   <!-- EXPLICAÇÃO -->
   <div id="explanation"></div>
 
@@ -153,6 +212,75 @@ function analyzeCode() {
     output.innerHTML = "✅ Código parece correto!";
   } else {
     output.innerHTML = errors.join("<br>");
+  }
+// ===== BUSCA INTELIGENTE =====
+const bancoBusca = [
+  {
+    palavras: ["função", "function"],
+    codigo: `function exemplo() {
+  console.log("Executando função");
+}`,
+    explicacao: "Isso cria uma função em JavaScript."
+  },
+
+  {
+    palavras: ["botão", "clique"],
+    codigo: `document.getElementById("btn").onclick = function() {
+  alert("Clicou!");
+};`,
+    explicacao: "Isso executa algo ao clicar em um botão."
+  },
+
+  {
+    palavras: ["if", "condição"],
+    codigo: `if (x > 10) {
+  console.log("Maior que 10");
+} else {
+  console.log("Menor ou igual a 10");
+}`,
+    explicacao: "Estrutura de decisão (if/else)."
+  },
+
+  {
+    palavras: ["tempo", "intervalo"],
+    codigo: `setInterval(function() {
+  console.log("Executando...");
+}, 1000);`,
+    explicacao: "Executa algo repetidamente no tempo."
+  },
+
+  {
+    palavras: ["elemento", "id"],
+    codigo: `const el = document.getElementById("meuId");
+el.innerText = "Texto alterado";`,
+    explicacao: "Pega elemento da página pelo ID."
+  }
+];
+
+// ===== FUNÇÃO DE BUSCA =====
+function buscarCodigo() {
+  const entrada = document.getElementById("busca").value.toLowerCase();
+  const codeBox = document.getElementById("codeBox");
+  const explanation = document.getElementById("explanation");
+
+  let resultado = "";
+  let explicacaoFinal = "";
+
+  bancoBusca.forEach(item => {
+    item.palavras.forEach(p => {
+      if (entrada.includes(p)) {
+        resultado += "\n// 🔹 " + p + "\n" + item.codigo + "\n";
+        explicacaoFinal += "👉 " + item.explicacao + "\n";
+      }
+    });
+  });
+
+  if (resultado === "") {
+    codeBox.value = "// ❌ Nenhum resultado encontrado";
+    explanation.innerText = "Tente: função, botão, if, intervalo, id";
+  } else {
+    codeBox.value = resultado;
+    explanation.innerText = explicacaoFinal;
   }
 }
 
